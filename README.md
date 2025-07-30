@@ -25,6 +25,7 @@ A demo Flutter app showing product categories, dynamic chips, and product grid w
 | Prompt | Applied to |
 |--|--|
 | "Help me organize the code and make it clean" | Code organization |
+| "Help me refine and clean the UI features" | UI polishing and improvements |
 
 ## 🚀 How to run the project
 1. Clone the repository:
