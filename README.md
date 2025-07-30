@@ -1,16 +1,33 @@
-# flutter_task
+# Flutter Task
 
-A new Flutter project.
+A demo Flutter app showing product categories, dynamic chips, and product grid with BLoC state management.
 
-## Getting Started
+## 📸 Screenshot
 
-This project is a starting point for a Flutter application.
+![App Screen](screenshot/ui_screen.jpg)
 
-A few resources to get you started if this is your first Flutter project:
+## ✅ Features
+- Display products in a grid
+- Select category
+- Increase/decrease quantity
+- Calculate total price in the cart
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 🛠 Architecture
+- Flutter + BLoC (Cubit)
+- Organized into:
+    - `bloc/` (business logic)
+    - `models/` (data classes)
+    - `data/` (repositories)
+    - `ui/` (screens)
+    - `core/` (shared widgets & utils)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🤖 ProxyAI Prompts Used
+| Prompt | Applied to |
+|--|--|
+| "Help me organize the code and make it clean" | Code organization |
+
+## 🚀 How to run the project
+1. Clone the repository:
+```bash
+git clone https://github.com/amira-ezzat/Flutter_Task.git
+cd Flutter_Task
