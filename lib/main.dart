@@ -7,10 +7,12 @@ import 'features/products/presentation/screens/products_screen.dart';
 
 void main() {
   runApp(
-    DevicePreview(
-      enabled: true,
-      builder: (context) => const MyApp(),
-    ),
+    const MyApp(),
+    // DevicePreview(
+    //   enabled: true,
+    //   builder: (context) =>
+    //
+    // ),
   );
 }
 

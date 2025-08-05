@@ -33,7 +33,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const CustomAppBar(),
+      appBar: CustomAppBar(
+        onSearchChanged: (value) {
+          context.read<CategoriesProductsCubit>().searchProducts(value);
+        },
+      ),
       body: BlocBuilder<CategoriesProductsCubit, CategoriesProductsState>(
         builder: (context, state) {
           final products = state.products;

@@ -18,6 +18,22 @@ class CategoriesProductsCubit extends Cubit<CategoriesProductsState> {
       print('Error fetching products: $e');
     }
   }
+  void searchProducts(String query) async {
+    if (query.isEmpty) {
+      fetchAllProducts(); // لو فاضي رجع كل المنتجات
+      return;
+    }
+
+    emit(state.copyWith(isLoading: true));
+
+    try {
+      final results = await ProductRepository().searchProducts(query);
+      emit(state.copyWith(products: results, isLoading: false));
+    } catch (e) {
+      emit(state.copyWith(isLoading: false));
+      print('Search error: $e');
+    }
+  }
 
   void selectCategory(String category) {
     emit(state.copyWith(selectedCategory: category));

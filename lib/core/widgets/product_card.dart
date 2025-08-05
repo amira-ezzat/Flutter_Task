@@ -19,7 +19,7 @@ class ProductCard extends StatelessWidget {
     return Card(
       color: Colors.white,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -32,12 +32,13 @@ class ProductCard extends StatelessWidget {
                   Container(
                     width: 100,
                     height: 100,
+
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.orange, width: 1),
                     ),
                     child: ClipOval(
-                      child: Image.asset(product.image, width: 55, height: 55),
+                      child: Image.asset('assets/icons/burger.png', width: 55, height: 55),
                     ),
                   ),
                   Positioned(
@@ -60,6 +61,9 @@ class ProductCard extends StatelessWidget {
             SizedBox(height: 8),
             Text(
               product.name,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              softWrap: false,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.darkText),
             ),
             SizedBox(height: 8),
@@ -76,7 +80,9 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+
+                  height: 50,
+                  padding: EdgeInsets.symmetric(horizontal: 0, vertical: 2),
                   decoration: BoxDecoration(
                     color: Color(0xFFeaf6f8),
                     borderRadius: BorderRadius.circular(20),
