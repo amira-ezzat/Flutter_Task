@@ -15,33 +15,27 @@ class Product {
 
   factory Product.fromJson(Map<String, dynamic> json) {
     final rawName = json['productName'] ?? '';
-    final parsedName = cleanName(rawName, 'ar');
+    final parsedName = cleanName(rawName, 'ar'); // اختاري 'en' لو عايزة إنجليزي
     return Product(
-      id: json['productID'] ?? '',
+      id: json['productID']?.toString() ?? '',
       name: parsedName,
       price: (json['standardUnitPrice'] ?? 0).toDouble(),
     );
   }
 }
 
-// ===============
-// Helper Functions
-// ===============
-
 /// تنظف الاسم وتعرضه حسب اللغة المطلوبة
 String cleanName(String text, String lang) {
   if (!isI18nText(text)) return text;
 
   final parsedTags = _parseTags(text);
-
   if (parsedTags.isEmpty) return text;
 
-  // لو فيه عربي وإنجليزي
-  if (parsedTags.containsKey('ar') && parsedTags.containsKey('en')) {
-    return parsedTags[lang.toLowerCase()] ?? text;
+  if (parsedTags.containsKey(lang.toLowerCase())) {
+    return parsedTags[lang.toLowerCase()]!;
   }
 
-  // لو مفيش غير لغة واحدة فقط
+  // رجع أي لغة تانية موجودة لو اللغة المطلوبة مش موجودة
   return parsedTags.values.first;
 }
 
@@ -65,4 +59,21 @@ Map<String, String> _parseTags(String text) {
   }
 
   return parsed;
+}
+
+
+class Category {
+  final String id;
+  final String name;
+
+  Category({required this.id, required this.name});
+
+  factory Category.fromJson(Map<String, dynamic> json) {
+    final raw = json['category'] ?? '';
+    final name = cleanName(raw, 'ar'); // ← غير هنا إلى "en" لو عايز إنجليزي
+    return Category(
+      id: json['categoryID'] ?? '',
+      name: name,
+    );
+  }
 }

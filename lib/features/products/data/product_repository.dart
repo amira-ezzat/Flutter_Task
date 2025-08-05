@@ -5,9 +5,12 @@ import 'model/product.dart';
 class ProductRepository {
   final String baseUrl = 'https://dev1.appxcart.com/plugins/appx_offline_support_plugin/service/v1';
   final String authToken =
-      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiYXB4c3JjIjoidGVzdC1wYyIsImlzcyI6ImRldi5hcHB4Y2FydC5jb20iLCJhbm9ueW1vdXMiOmZhbHNlLCJleHAiOjE3NTQzODM1MzMsImlhdCI6MTc1NDM3OTkzM30.nDcZvj1CrjDkzKmanHJ_Xh2G6DuGBXVSjr0ZoKAz2RhKcboBOflprhwMW0Yr3zkxmpXL9wfeO4KsjhFYtuBucQ'
-
- ;
+'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiYXB4c3JjIjoidGVzdC1wYyIsImlzcyI6ImRldi5hcHB4Y2FydC5jb20iLCJhbm9ueW1vdXMiOmZhbHNlLCJleHAiOjE3NTQ0MDEzMDAsImlhdCI6MTc1NDM5NzcwMH0.ISgly3p4iqF8Xe3-zq6fEujqP_-XNeLD5otDZojVC5ObTTXx7nM0d5lppU66eWnGLq8L1h3WYNhIBmwAHiraXw'
+  ;
+  Map<String, String> get headers => {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer $authToken',
+  };
 
   Future<void> assignStoreToSession() async {
     final url = Uri.parse('$baseUrl/AssignStoreToSession');
@@ -17,34 +20,51 @@ class ProductRepository {
       "storeId": "2c346a67-943e-4b77-bc4e-a29fab885ef5",
     });
 
-    final headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $authToken',
-
-    };
-
-
     try {
-      print('Calling AssignStoreToSession...');
-      print('Fetching products...');
-      print('URL: $url');
-      print('Headers: $headers');
-      print('Body: $body');
-
+      print('📦 Assigning store...');
       final response = await http.post(url, headers: headers, body: body);
-      print('AssignStoreToSession status: ${response.statusCode}');
+      print('✅ Status: ${response.statusCode}');
+      print('📨 Body: ${response.body}');
 
-      print('AssignStoreToSession body: ${response.body}');
-
-      if (response.statusCode == 200) {
-        print('Store assigned successfully!');
-      } else {
-        throw Exception('Failed to assign store: ${response.statusCode}');
+      if (response.statusCode != 200) {
+        throw Exception('❌ Failed to assign store: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error in assignStoreToSession: $e');
-      throw Exception('Failed to assign store: $e');
+      print('🚨 Error in assignStoreToSession: $e');
+      rethrow;
     }
+  }
+  Future<List<Category>> fetchAllCategories() async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/GetAllCategories'),
+      headers: headers,
+      body: jsonEncode({
+        "class": "sa.com.doit.cart.service.request.AllCategoriesRequest"
+      }),
+    );
+
+    final data = jsonDecode(response.body);
+    final List list = data['categories'] ?? [];
+
+    return list.map((e) => Category.fromJson(e)).toList();
+  }
+
+  Future<List<Product>> fetchProductsByCategory(String categoryId) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/GetAllProducts'),
+      headers: headers,
+      body: jsonEncode({
+        "class": "sa.com.doit.cart.service.request.GetAllProductsRequest",
+        "categoryId": categoryId,
+        "size": 20,
+        "start": 0,
+      }),
+    );
+
+    final data = jsonDecode(response.body);
+    final List list = data['list'] ?? [];
+
+    return list.map((e) => Product.fromJson(e)).toList();
   }
 
   Future<List<Product>> fetchAllProducts() async {
@@ -53,19 +73,11 @@ class ProductRepository {
     final body = jsonEncode({
       "class": "sa.com.doit.cart.service.request.GetAllProductsRequest",
       "size": 20,
-      "start": 20
+      "start": 0
     });
-
-    final headers = {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer $authToken",
-    };
 
     try {
       await assignStoreToSession();
-
-      print('Fetching products...');
-      // final response = await http.post(url, headers: headers, body: body);
 
       final request = http.Request('POST', url)
         ..headers.addAll(headers)
@@ -74,29 +86,22 @@ class ProductRepository {
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
 
-      print('Full request URL: $url');
-      print('Request headers: ${request.headers}');
-      print('Request body: ${request.body}');
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      print('📦 Fetch All Products Status: ${response.statusCode}');
+      print('📨 Body: ${response.body}');
 
       if (response.statusCode == 200) {
-        print('Get all products successfully!');
         final data = jsonDecode(response.body);
         final List<dynamic> list = data['list'] ?? [];
-
         return list.map((item) => Product.fromJson(item)).toList();
       } else {
-        throw Exception('Failed to load products: ${response.statusCode}');
+        throw Exception('❌ Failed to fetch products');
       }
     } catch (e) {
-      print('Error fetching products: $e');
-      throw Exception('Failed to fetch products: $e');
+      print('🚨 Error fetching all products: $e');
+      rethrow;
     }
   }
+
   Future<List<Product>> searchProducts(String query) async {
     final url = Uri.parse('$baseUrl/SearchProducts');
 
@@ -105,7 +110,7 @@ class ProductRepository {
       "productProperties": [
         {
           "class": "sa.com.doit.cart.model.FilterAttribute",
-          "title": "Tag",
+          "title": "productName",
           "value": query,
         }
       ],
@@ -113,11 +118,6 @@ class ProductRepository {
       "orderBy": "UPC",
       "asc": true
     });
-
-    final headers = {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer $authToken",
-    };
 
     try {
       await assignStoreToSession();
@@ -129,19 +129,25 @@ class ProductRepository {
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
 
+      print('🔍 SearchProducts Status: ${response.statusCode}');
+      print('📨 Response body: ${response.body}');
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final List<dynamic> list = data['products'] ?? [];
 
+        print('✅ Found ${list.length} products');
+        if (list.isNotEmpty) {
+          print('🔹 First product: ${list.first}');
+        }
+
         return list.map((item) => Product.fromJson(item)).toList();
       } else {
-        throw Exception('Failed to search products: ${response.statusCode}');
+        throw Exception('❌ Failed to search products: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error searching products: $e');
-      throw Exception('Failed to search products: $e');
+      print('🚨 Error searching products: $e');
+      rethrow;
     }
   }
-
-
 }

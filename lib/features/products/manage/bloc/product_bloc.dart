@@ -1,43 +1,45 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_task/features/products/manage/bloc/peoduct_state.dart';
 import '../../data/model/product.dart';
 import '../../data/product_repository.dart';
+import 'peoduct_state.dart';
 
 class CategoriesProductsCubit extends Cubit<CategoriesProductsState> {
   final ProductRepository repository;
 
+  List<Category> categories = [];
+
   CategoriesProductsCubit(this.repository)
-      : super(CategoriesProductsState(selectedCategory: 'أفضل العروض', products: []));
+      : super(CategoriesProductsState(selectedCategory: '', products: [], isLoading: false));
 
-  Future<void> fetchAllProducts() async {
-    try {
-      final products = await repository.fetchAllProducts();
-      print('Cubit loaded products: ${products.length}');
-      emit(state.copyWith(products: products));
-    } catch (e) {
-      print('Error fetching products: $e');
-    }
-  }
-  void searchProducts(String query) async {
-    if (query.isEmpty) {
-      fetchAllProducts(); // لو فاضي رجع كل المنتجات
-      return;
-    }
-
+  Future<void> init() async {
     emit(state.copyWith(isLoading: true));
 
     try {
-      final results = await ProductRepository().searchProducts(query);
-      emit(state.copyWith(products: results, isLoading: false));
+      categories = await repository.fetchAllCategories();
+      if (categories.isNotEmpty) {
+        final first = categories.first;
+        emit(state.copyWith(selectedCategory: first.name));
+        await fetchProductsByCategory(first.id);
+      }
     } catch (e) {
       emit(state.copyWith(isLoading: false));
-      print('Search error: $e');
     }
   }
 
-  void selectCategory(String category) {
-    emit(state.copyWith(selectedCategory: category));
-    // هنا ممكن تضيف فلترة حسب category لو حابب
+  Future<void> fetchProductsByCategory(String categoryId) async {
+    emit(state.copyWith(isLoading: true));
+
+    try {
+      final products = await repository.fetchProductsByCategory(categoryId);
+      emit(state.copyWith(products: products, isLoading: false));
+    } catch (e) {
+      emit(state.copyWith(isLoading: false));
+    }
+  }
+
+  void selectCategory(Category category) async {
+    emit(state.copyWith(selectedCategory: category.name));
+    await fetchProductsByCategory(category.id);
   }
 
   void increment(Product product) {

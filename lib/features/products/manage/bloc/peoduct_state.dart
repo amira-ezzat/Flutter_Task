@@ -1,24 +1,24 @@
 import '../../data/model/product.dart';
 
 class CategoriesProductsState {
-  final String selectedCategory;
   final List<Product> products;
-  final bool isLoading; // ✅ أضف هذا
+  final String selectedCategory;
+  final bool isLoading;
 
   CategoriesProductsState({
-    required this.selectedCategory,
     required this.products,
+    required this.selectedCategory,
     this.isLoading = false,
   });
 
   CategoriesProductsState copyWith({
-    String? selectedCategory,
     List<Product>? products,
+    String? selectedCategory,
     bool? isLoading,
   }) {
     return CategoriesProductsState(
-      selectedCategory: selectedCategory ?? this.selectedCategory,
       products: products ?? this.products,
+      selectedCategory: selectedCategory ?? this.selectedCategory,
       isLoading: isLoading ?? this.isLoading,
     );
   }
