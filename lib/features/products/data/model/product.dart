@@ -1,25 +1,37 @@
-// lib/features/products/data/model/product.dart
+
+import 'dart:convert';
 
 class Product {
   final String id;
   final String name;
   final double price;
   int quantity;
+  final String? imageId; // New field for image ID
+  final String? storeImageId; // Add this line
 
   Product({
     required this.id,
     required this.name,
     required this.price,
     this.quantity = 0,
+    this.imageId, // Initialize new field
+    this.storeImageId, // Initialize new field
+
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     final rawName = json['productName'] ?? '';
-    final parsedName = cleanName(rawName, 'ar'); // اختاري 'en' لو عايزة إنجليزي
+    final parsedName = cleanName(rawName, 'ar');
+
+    final String? extractedImageId = json['avatar'];
+    final String? extractedStoreImageId = json['category']?['store']?['avatar'];
+
     return Product(
       id: json['productID']?.toString() ?? '',
       name: parsedName,
       price: (json['standardUnitPrice'] ?? 0).toDouble(),
+      imageId: extractedImageId,
+      storeImageId: extractedStoreImageId, // ← add this
     );
   }
 }
@@ -70,7 +82,7 @@ class Category {
 
   factory Category.fromJson(Map<String, dynamic> json) {
     final raw = json['category'] ?? '';
-    final name = cleanName(raw, 'ar'); // ← غير هنا إلى "en" لو عايز إنجليزي
+    final name = cleanName(raw, 'ar');
     return Category(
       id: json['categoryID'] ?? '',
       name: name,
