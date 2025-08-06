@@ -50,14 +50,14 @@ class ProductCard extends StatelessWidget {
                             return const Center(child: CircularProgressIndicator());
                           } else if (snapshot.hasError || snapshot.data == null) {
                             // Fallback to default image if error or no data
-                            return Image.asset('assets/icons/burger.png', width: 55, height: 55, );
+                            return Image.asset('assets/icons/no.png',color: Colors.grey.shade300, width: 55, height: 55, );
                           } else {
                             // Display the image from Uint8List
                             return Image.memory(snapshot.data!, fit: BoxFit.cover,width: 55,height: 44,);
                           }
                         },
                       )
-                          : Image.asset('assets/icons/burger.png', width: 55, height: 55, ), // Default image if no imageId
+                          : Image.asset('assets/icons/no.png', color: Colors.grey.shade300,width: 55, height: 55, ), // Default image if no imageId
                     ),
                   ),
                   Positioned(
@@ -78,9 +78,10 @@ class ProductCard extends StatelessWidget {
                           if (snapshot.connectionState == ConnectionState.waiting || snapshot.hasError || snapshot.data == null) {
                             return Padding(
                               padding: const EdgeInsets.all(5.0),
-                              child: Image.asset('assets/icons/burger.png', fit: BoxFit.cover),
+                              child: Image.asset('assets/icons/no.png',color: Colors.grey.shade300, fit: BoxFit.cover),
                             );
                           } else {
+
                             return ClipOval(
                               child: Image.memory(snapshot.data!, fit: BoxFit.cover),
                             );
@@ -89,7 +90,7 @@ class ProductCard extends StatelessWidget {
                       )
                           : Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Image.asset('assets/icons/burger.png', fit: BoxFit.cover),
+                        child: Image.asset('assets/icons/no.png',color: Colors.grey.shade300, fit: BoxFit.cover),
                       ),                    ),
                   ),
                 ],
