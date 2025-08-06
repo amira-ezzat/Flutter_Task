@@ -6,7 +6,7 @@ import 'model/product.dart';
 class ProductRepository {
   final String baseUrl = 'https://dev1.appxcart.com/plugins/appx_offline_support_plugin/service/v1';
   final String authToken =
-'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiYXB4c3JjIjoidGVzdC1wYyIsImlzcyI6ImRldi5hcHB4Y2FydC5jb20iLCJhbm9ueW1vdXMiOmZhbHNlLCJleHAiOjE3NTQ0ODQ1MDgsImlhdCI6MTc1NDQ4MDkwOH0.DIcKtb2HhKfIqYTHZavc0EHIzpWk5R1zx23q8cO7GsnTKw7a6-_wlQuOW-QBPfNzZ7x9YX8-94mRrdqyp3lI9A'
+'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiYXB4c3JjIjoidGVzdC1wYyIsImlzcyI6ImRldi5hcHB4Y2FydC5jb20iLCJhbm9ueW1vdXMiOmZhbHNlLCJleHAiOjE3NTQ0ODg1NjUsImlhdCI6MTc1NDQ4NDk2NX0.r_JD90T5x5Szb4OAVBHRteGlPlim0yX_qME69yaNTzI7ppzksGJaVVhyuygQ_yqIQ8kj1DTAAaT0Pc6_4s8LfQ'
   ;
   Map<String, String> get headers => {
     'Content-Type': 'application/json',
